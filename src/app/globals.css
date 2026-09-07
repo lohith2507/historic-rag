@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f3f0e9;
+  --foreground: #172235;
+  --ink: #172235;
+  --muted: #536071;
+  --stone: #f3f0e9;
+  --paper: #fffdfa;
+  --mist: #e8edf0;
+  --line: #d9dedb;
+  --ochre: #d6a23d;
+  --ochre-dark: #c18d28;
+  --ochre-soft: rgba(214, 162, 61, 0.22);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-ibm-plex-sans);
+  --font-serif: var(--font-source-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ibm-plex-sans), Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
