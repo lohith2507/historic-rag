@@ -2,6 +2,52 @@
 
 Next.js app for semantic search and chat Q&A over historic Indian texts (Mahabharata, Ramayana, Bhagavad Gita). Embeddings live in Supabase pgvector; generation uses OpenRouter.
 
+## How it works
+
+![Historic India RAG workflow](docs/workflow.gif)
+
+Offline ingest builds the vector store once. At runtime the app embeds the user question, retrieves ranked passages, and (in chat) streams a grounded answer. Follow-ups switch modes for more background, a full battle story, or an encounter inventory.
+
+### Architecture
+
+```mermaid
+flowchart LR
+  subgraph Offline["Offline ingest (local)"]
+    PDF["Epic PDFs"] --> Ingest["scripts/ingest.py"]
+    Ingest --> Embed1["OpenRouter embeddings"]
+    Embed1 --> SB[(Supabase pgvector)]
+  end
+
+  subgraph Runtime["Runtime (Next.js / Vercel)"]
+    UI["Search / Chat UI"] --> API["/api/search or /api/chat"]
+    API --> Embed2["Embed query"]
+    Embed2 --> SB
+    SB --> Ctx["Ranked passages"]
+    Ctx --> UI
+    API --> LLM["OpenRouter chat stream"]
+    LLM --> UI
+  end
+```
+
+### Search vs chat
+
+```mermaid
+flowchart TD
+  Q["User question"] --> Mode{Mode}
+  Mode -->|Search| S["POST /api/search"]
+  Mode -->|Chat| C["POST /api/chat"]
+  S --> R["Retrieve match_chunks"]
+  C --> R
+  R --> Passages["Ranked passages + citations"]
+  Passages --> SOut["Search results list"]
+  Passages --> Prompt["Mode-aware system prompt"]
+  Prompt --> Stream["Stream grounded answer"]
+  Stream --> Follow{"Follow-up"}
+  Follow -->|More context| BG["Background / vows / weapons"]
+  Follow -->|Full battle story| Story["Step-by-step duel narrative"]
+  Follow -->|More encounters| Inv["Encounter inventory"]
+```
+
 ## Prerequisites
 
 - Node.js 20+
@@ -69,6 +115,8 @@ See [`scripts/README.md`](scripts/README.md) for source PDF filenames and more i
 
 PDFs are **not** required on Vercel. Ingest runs locally once; the deployed app only queries the Supabase database at runtime.
 
+Live demo: [https://historic-rag.vercel.app](https://historic-rag.vercel.app)
+
 ## Corpus
 
 Place these gitignored PDFs at the repo root before ingesting:
@@ -82,7 +130,7 @@ Place these gitignored PDFs at the repo root before ingesting:
 ## API routes
 
 - `POST /api/search` — embed query, return ranked passages
-- `POST /api/chat` — retrieve context, stream a grounded answer
+- `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode)
 
 These public API routes call OpenRouter and spend credits per request.
 
@@ -104,3 +152,4 @@ After completing setup and ingest, verify:
 | `npm run start` | Serve production build |
 | `npm run lint` | Run ESLint |
 | `npm test` | Run TypeScript unit tests |
+| `python scripts/make_workflow_gif.py` | Regenerate `docs/workflow.gif` |

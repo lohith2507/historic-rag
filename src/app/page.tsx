@@ -44,17 +44,17 @@ const FOLLOW_UP_PROMPTS = [
   {
     label: "More context",
     message:
-      "Give me more context from the epics for the previous question. Pull related background, judgments, and surrounding events from the retrieved texts.",
+      "Expand the previous answer with MORE CONTEXT only: background, lineage, vows, curses, weapons, alliances, Krishna's counsel, and surrounding episodes for the same rivals/topic. Do not repeat the earlier verdict essay; add new explanatory background from the texts.",
   },
   {
     label: "Full battle story",
     message:
-      "Tell the full story of the main battle(s) relevant to the previous question, step by step, using only the epic passages. Include who had the upper hand at each stage and how it ends.",
+      "Tell the FULL BATTLE STORY step by step of the main duel(s) for the previous question. Use chronological stages, say who had the upper hand at each stage, cite pages, and do not reuse the comparison-essay format.",
   },
   {
     label: "More encounters",
     message:
-      "List every encounter, duel, or comparison mentioned in the context for the previous question, and say who had the advantage in each according to the text.",
+      "List EVERY ENCOUNTER or clash in Context for the previous question. For each one: setting, what happens, who had the advantage, and citation. Do not rewrite the previous essay; give an encounter inventory.",
   },
 ] as const;
 

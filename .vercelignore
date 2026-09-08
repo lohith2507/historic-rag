@@ -1,0 +1,14 @@
+# Keep deploys small — ingest runs locally only
+*.pdf
+node_modules
+.next
+graphify-out
+.superpowers
+.cursor
+.git
+.venv
+__pycache__
+coverage
+*.log
+.env*.local
+.env

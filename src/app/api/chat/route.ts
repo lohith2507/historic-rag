@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
 
+import {
+  buildRetrievalQuery,
+  detectAnswerMode,
+  findAnchorQuestion,
+  retrievalLimit,
+  type AnswerMode,
+} from "@/lib/chat-modes";
 import { getChatModel } from "@/lib/openrouter";
 import { buildContext, retrieveChunks } from "@/lib/rag";
 import { MissingSupabaseConfigError } from "@/lib/supabase";
@@ -88,60 +95,230 @@ function findLastUserMessage(messages: ChatMessage[]): string | null {
   return null;
 }
 
-function buildSystemPrompt(question: string, context: string, scope: "all" | SourceId): string {
-  const scopeLine =
-    scope === "all"
-      ? "Retrieved passages may come from the Mahabharata, Ramayana, and/or Bhagavad Gita. Synthesize one coherent answer across all relevant books; note agreement or differences when they matter."
-      : `Focus on passages from the ${scope}. If other books appear in Context, use them only if they clearly help.`;
+function scopeLine(scope: "all" | SourceId): string {
+  return scope === "all"
+    ? "Retrieved passages may come from the Mahabharata, Ramayana, and/or Bhagavad Gita. Synthesize across relevant books; note agreement or differences when they matter."
+    : `Focus on passages from the ${scope}. If other books appear in Context, use them only if they clearly help.`;
+}
 
+function sharedRules(): string[] {
   return [
     "You are an analyst for Indian epic texts (Mahabharata, Ramayana, Bhagavad Gita).",
-    "Workflow: (1) read the Question, (2) gather related facts only from Context, (3) analyze, (4) answer in the format below.",
-    "Use ONLY the Context passages (retrieved via embeddings). Do not invent plot, quotes, or teachings.",
+    "Use ONLY the Context passages. Do not invent plot, quotes, page numbers, or teachings.",
     "If Context is weak or off-topic, say you do not have enough support in the retrieved passages.",
-    scopeLine,
+    "Quotes must be short verbatim excerpts from Context, not paraphrases wrapped in quotation marks.",
+    "Ignore OCR/encoding noise; reconstruct readable meaning when intent is clear.",
+    "Do not repeat an earlier assistant answer. Add new detail demanded by the current request.",
+  ];
+}
+
+function continueSection(): string[] {
+  return [
+    "## Continue",
+    "End with exactly these three follow-up options:",
+    "- More context: background, lineage, vows, curses, weapons, judgments",
+    "- Full battle story: chronological duel narrative with who leads at each stage",
+    "- More encounters: every clash in Context and who had the upper hand",
+  ];
+}
+
+function buildDefaultPrompt(question: string, context: string, scope: "all" | SourceId): string {
+  return [
+    ...sharedRules(),
+    scopeLine(scope),
     "",
-    `Question: ${question}`,
+    `Original question: ${question}`,
     "",
-    "If the Question is a comparison (who is stronger/more powerful/better, who wins, Karna vs Arjuna, etc.):",
-    "- Start with a one-line ## Verdict that names a clear answer when the text supports one (e.g. \"Arjuna is presented as the one who can defeat Karna\" or \"The text treats them as near-equals, with Arjuna winning the final duel\").",
-    "- In ## Evidence, list concrete encounters, boasts, or judgments from Context (who had the upper hand, who Krishna praises, who wins).",
-    "- Do NOT invent a win count. If the Context does not list every battle, say what it does show and what is missing.",
-    "- Include nuance when Context conflicts (e.g. Krishna calling Karna equal/superior vs Arjuna's victory).",
-    "- Keep the medium structure below, but put Verdict first.",
+    "Write a detailed, explanatory answer. Assume the reader wants real substance, not a thin summary.",
     "",
-    "Answer format (always follow this structure):",
+    "If this is a comparison (who is stronger/more powerful/better, who wins, Karna vs Arjuna, etc.):",
+    "- Open with a clear ## Verdict naming what the text supports.",
+    "- Explain why, with concrete encounters, boasts, judgments, weapons, and divine support from Context.",
+    "- Include nuance when Context conflicts (e.g. praise of Karna vs Arjuna's final victory).",
+    "- Do NOT invent a win count. Say what Context shows and what is missing.",
+    "",
+    "Answer format:",
     "## Verdict",
-    "One clear line that answers the Question directly (especially for comparisons).",
+    "One direct line answering the question.",
     "",
     "## Summary",
-    "2–4 sentences that explain that verdict using Context.",
+    "4–7 sentences that explain the verdict with names, events, and stakes from Context.",
+    "",
+    "## Background",
+    "A short paragraph of relevant setup from Context (status, vows, weapons, allies, prior rivalry) that helps the reader understand the comparison.",
     "",
     "## Key points / Evidence",
-    "3–6 short bullets with concrete text-backed details (battles, judgments, outcomes).",
+    "5–8 bullets with concrete text-backed details (who had the upper hand, who is praised, outcomes).",
     "",
     "## Analysis",
-    "One short paragraph connecting the evidence to the Question.",
+    "One fuller paragraph connecting the evidence to the question and noting limits of the retrieved passages.",
     "",
     "## Quotes",
-    "1–3 brief quotations from Context (in quotation marks), each with source/page when available.",
-    "Balance summary and quotes.",
+    "2–4 brief verbatim quotations from Context, each with source/page when available.",
     "",
     "## Sources",
     "List like: mahabharata p.4205; mahabharata p.3378",
     "",
-    "## Continue",
-    "End with exactly these three follow-up options as a short list:",
-    "- More context: ask for deeper background from the same theme",
-    "- Full battle story: ask for a step-by-step story of the main duel(s) in Context",
-    "- More encounters: ask for every clash mentioned in Context and who had the upper hand",
-    "",
-    "Frame every section around the Question. Prefer concrete names, events, and teachings from Context.",
-    "Ignore OCR/encoding noise; reconstruct readable meaning when intent is clear.",
+    ...continueSection(),
     "",
     "Context:",
     context || "No relevant context was found.",
   ].join("\n");
+}
+
+function buildMoreContextPrompt(
+  question: string,
+  request: string,
+  context: string,
+  scope: "all" | SourceId,
+): string {
+  return [
+    ...sharedRules(),
+    scopeLine(scope),
+    "",
+    `Original question: ${question}`,
+    `Current request: ${request}`,
+    "",
+    "Mode: MORE CONTEXT. Do not restate the previous verdict essay.",
+    "Focus on deeper background that helps understand the original question:",
+    "lineage/status, vows, curses, boons, weapons, charioteers, alliances, Krishna's counsel, reputation, and surrounding episodes from Context.",
+    "It is fine to mention the overall outcome briefly, but most of the answer must be new background detail.",
+    "",
+    "Answer format:",
+    "## Focus",
+    "One line naming what background you are expanding for the original question.",
+    "",
+    "## Background narrative",
+    "2–4 short paragraphs of explanatory background drawn only from Context.",
+    "",
+    "## Related judgments & omens",
+    "Bullets of praises, warnings, vows, or divine assessments relevant to the rivals/topic.",
+    "",
+    "## What this adds",
+    "A short paragraph explaining how this background changes or deepens understanding of the original question.",
+    "",
+    "## Quotes",
+    "2–4 brief verbatim quotations from Context with source/page when available.",
+    "",
+    "## Sources",
+    "List like: mahabharata p.4205; mahabharata p.3378",
+    "",
+    ...continueSection(),
+    "",
+    "Context:",
+    context || "No relevant context was found.",
+  ].join("\n");
+}
+
+function buildBattleStoryPrompt(
+  question: string,
+  request: string,
+  context: string,
+  scope: "all" | SourceId,
+): string {
+  return [
+    ...sharedRules(),
+    scopeLine(scope),
+    "",
+    `Original question: ${question}`,
+    `Current request: ${request}`,
+    "",
+    "Mode: FULL BATTLE STORY. Do not reuse the comparison-essay structure.",
+    "Tell a chronological story of the main duel(s) or battle sequence in Context that relate to the original question.",
+    "Use staged narrative: opening, exchanges, shifts of advantage, climax, ending.",
+    "At every major stage, state who had the upper hand according to Context.",
+    "If Context only covers fragments, narrate those fragments in order and say what is missing.",
+    "Do not invent intermediate stages that are not in Context.",
+    "",
+    "Answer format:",
+    "## Battle focus",
+    "Name the duel(s)/battle day(s) you can support from Context.",
+    "",
+    "## Step-by-step story",
+    "Numbered stages (Stage 1, Stage 2, ...). Each stage: what happens, who leads, and a source/page citation when available.",
+    "Write enough detail that a reader can follow the fight without reading the previous answer.",
+    "",
+    "## Turning points",
+    "Bullets for moments where momentum shifts (weapons, chariot issues, counsel, wounds) if present in Context.",
+    "",
+    "## Ending",
+    "How the fight ends in Context, and what that implies for the original question.",
+    "",
+    "## Quotes",
+    "2–4 brief verbatim quotations from Context with source/page when available.",
+    "",
+    "## Sources",
+    "List like: mahabharata p.4205; mahabharata p.3378",
+    "",
+    ...continueSection(),
+    "",
+    "Context:",
+    context || "No relevant context was found.",
+  ].join("\n");
+}
+
+function buildEncountersPrompt(
+  question: string,
+  request: string,
+  context: string,
+  scope: "all" | SourceId,
+): string {
+  return [
+    ...sharedRules(),
+    scopeLine(scope),
+    "",
+    `Original question: ${question}`,
+    `Current request: ${request}`,
+    "",
+    "Mode: MORE ENCOUNTERS. Do not rewrite the previous essay.",
+    "Inventory every distinct encounter, duel, clash, or direct comparison in Context that relates to the original question.",
+    "For each item: where/when if known, what happens, who had the advantage, and citation.",
+    "If two passages describe the same clash, merge them into one entry.",
+    "If Context does not contain multiple encounters, say so and list only what is there.",
+    "",
+    "Answer format:",
+    "## Encounter inventory",
+    "A short line stating how many distinct encounters/comparisons Context supports.",
+    "",
+    "## Encounters",
+    "Numbered list. Each entry must include:",
+    "- Setting / reference (source/page if available)",
+    "- What happens",
+    "- Who had the upper hand (or \"unclear in Context\")",
+    "",
+    "## Scoreboard from Context only",
+    "Brief tally of advantages implied by the listed encounters, without inventing missing fights.",
+    "",
+    "## Quotes",
+    "1–3 brief verbatim quotations from Context with source/page when available.",
+    "",
+    "## Sources",
+    "List like: mahabharata p.4205; mahabharata p.3378",
+    "",
+    ...continueSection(),
+    "",
+    "Context:",
+    context || "No relevant context was found.",
+  ].join("\n");
+}
+
+function buildSystemPrompt(
+  mode: AnswerMode,
+  question: string,
+  request: string,
+  context: string,
+  scope: "all" | SourceId,
+): string {
+  switch (mode) {
+    case "more-context":
+      return buildMoreContextPrompt(question, request, context, scope);
+    case "battle-story":
+      return buildBattleStoryPrompt(question, request, context, scope);
+    case "encounters":
+      return buildEncountersPrompt(question, request, context, scope);
+    default:
+      return buildDefaultPrompt(question, context, scope);
+  }
 }
 
 function buildSources(chunks: ChunkMatch[]): Source[] {
@@ -234,11 +411,13 @@ export async function POST(request: Request) {
 
   try {
     const filterSource = typeof body.source === "string" ? (body.source as SourceId) : undefined;
-    // All-books mode: pull more embedding matches so the model can synthesize across epics.
-    const chunks = await retrieveChunks(query, {
+    const mode = detectAnswerMode(query);
+    const anchorQuestion = findAnchorQuestion(messages) || query;
+    const retrievalQuery = buildRetrievalQuery(mode, query, anchorQuestion);
+    const chunks = await retrieveChunks(retrievalQuery, {
       source: filterSource,
-      limit: filterSource ? 12 : 18,
-      minSimilarity: 0.22,
+      limit: retrievalLimit(mode, Boolean(filterSource)),
+      minSimilarity: 0.2,
     });
     const context = buildContext(chunks);
     const apiKey = process.env.OPENROUTER_API_KEY;
@@ -256,11 +435,11 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: getChatModel(),
         stream: true,
-        temperature: 0.25,
+        temperature: mode === "default" ? 0.3 : 0.35,
         messages: [
           {
             role: "system",
-            content: buildSystemPrompt(query, context, filterSource ?? "all"),
+            content: buildSystemPrompt(mode, anchorQuestion, query, context, filterSource ?? "all"),
           },
           ...messages,
         ],
