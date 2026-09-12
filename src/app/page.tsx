@@ -20,11 +20,20 @@ type ChatSource = {
   similarity: number;
 };
 
+type ChatScene = {
+  svg: string;
+  caption: string;
+};
+
+type SceneStatus = "idle" | "pending" | "done";
+
 type ChatMessage = {
   id: string;
   role: Role;
   content: string;
   sources?: ChatSource[];
+  scene?: ChatScene;
+  sceneStatus?: SceneStatus;
 };
 
 const SOURCE_OPTIONS: SourceOption[] = [
@@ -85,6 +94,37 @@ function parseSseEvent(block: string): { event: string; data: unknown } | null {
   }
 
   return { event, data: JSON.parse(dataLines.join("\n")) as unknown };
+}
+
+function SceneFrame({ scene, status }: { scene?: ChatScene; status?: SceneStatus }) {
+  if (status === "pending") {
+    return (
+      <figure className="mb-5 rounded-2xl border border-dashed border-[var(--line)] bg-[var(--mist)]/50 p-10 text-center">
+        <span className="scene-pulse text-sm font-medium text-[var(--muted)]">
+          Composing the scene...
+        </span>
+      </figure>
+    );
+  }
+
+  if (!scene) {
+    return null;
+  }
+
+  return (
+    <figure className="mb-5 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--mist)]/40">
+      {/* Model output is sanitized server-side by sanitizeSvg; the filter guarantees grayscale. */}
+      <div
+        className="scene-stage [&>svg]:block [&>svg]:h-auto [&>svg]:w-full"
+        dangerouslySetInnerHTML={{ __html: scene.svg }}
+      />
+      {scene.caption ? (
+        <figcaption className="border-t border-[var(--line)] px-4 py-2.5 font-serif text-sm italic text-[var(--muted)]">
+          {scene.caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
 }
 
 export default function Home() {
@@ -237,6 +277,35 @@ export default function Home() {
             );
           }
 
+          if (parsed.event === "scene-pending") {
+            setChatMessages((messages) =>
+              messages.map((message) =>
+                message.id === assistantMessage.id
+                  ? { ...message, sceneStatus: "pending" as SceneStatus }
+                  : message,
+              ),
+            );
+          }
+
+          if (parsed.event === "scene") {
+            const payload = parsed.data as { svg?: unknown; caption?: unknown };
+            const scene =
+              typeof payload.svg === "string" && payload.svg.length > 0
+                ? {
+                    svg: payload.svg,
+                    caption: typeof payload.caption === "string" ? payload.caption : "",
+                  }
+                : undefined;
+
+            setChatMessages((messages) =>
+              messages.map((message) =>
+                message.id === assistantMessage.id
+                  ? { ...message, scene, sceneStatus: "done" as SceneStatus }
+                  : message,
+              ),
+            );
+          }
+
           if (parsed.event === "error") {
             const streamError = parsed.data as { error?: unknown };
             throw new Error(
@@ -252,7 +321,11 @@ export default function Home() {
       setChatMessages((messages) =>
         messages.map((chatMessage) =>
           chatMessage.id === assistantMessage.id
-            ? { ...chatMessage, content: chatMessage.content || `Chat could not complete: ${message}` }
+            ? {
+                ...chatMessage,
+                content: chatMessage.content || `Chat could not complete: ${message}`,
+                sceneStatus: "done" as SceneStatus,
+              }
             : chatMessage,
         ),
       );
@@ -449,6 +522,9 @@ export default function Home() {
                             : "mr-auto max-w-3xl border border-[var(--line)] bg-white text-[var(--ink)]"
                         }`}
                       >
+                        {message.role === "assistant" ? (
+                          <SceneFrame scene={message.scene} status={message.sceneStatus} />
+                        ) : null}
                         <p className="whitespace-pre-wrap leading-8">
                           {message.content || "Reading the passages..."}
                         </p>

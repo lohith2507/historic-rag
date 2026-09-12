@@ -16,6 +16,11 @@ export function getChatModel(): string {
   return process.env.OPENROUTER_CHAT_MODEL || DEFAULT_CHAT_MODEL;
 }
 
+/** Scene drawing benefits from a stronger model, so it can be pointed elsewhere than the chat model. */
+export function getSceneModel(): string {
+  return process.env.OPENROUTER_SCENE_MODEL || getChatModel();
+}
+
 export async function embedText(text: string): Promise<number[]> {
   const apiKey = process.env.OPENROUTER_API_KEY;
 

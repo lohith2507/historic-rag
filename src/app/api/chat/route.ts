@@ -9,6 +9,7 @@ import {
 } from "@/lib/chat-modes";
 import { getChatModel } from "@/lib/openrouter";
 import { buildContext, retrieveChunks } from "@/lib/rag";
+import { generateScene } from "@/lib/scene";
 import { MissingSupabaseConfigError } from "@/lib/supabase";
 import type { ChunkMatch, SourceId } from "@/lib/types";
 
@@ -462,6 +463,19 @@ export async function POST(request: Request) {
         } catch (error) {
           console.error("Chat stream failed", error);
           controller.enqueue(encoder.encode(encodeSse("error", { error: "Chat stream failed" })));
+        }
+
+        // The scene is drawn after the answer so it never delays the text or the citations.
+        // generateScene resolves to null on any failure; the answer simply renders without one.
+        try {
+          controller.enqueue(encoder.encode(encodeSse("scene-pending", { pending: true })));
+
+          const scene = await generateScene(anchorQuestion, context);
+
+          controller.enqueue(encoder.encode(encodeSse("scene", scene ?? { svg: null, caption: null })));
+        } catch (error) {
+          console.error("Scene stage failed", error);
+          controller.enqueue(encoder.encode(encodeSse("scene", { svg: null, caption: null })));
         } finally {
           controller.close();
         }

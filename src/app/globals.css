@@ -32,3 +32,40 @@ input,
 select {
   font: inherit;
 }
+
+/* Belt and braces on the scene prompt: whatever colours the model reaches for, the plate reads as ink. */
+.scene-stage {
+  filter: grayscale(1) contrast(1.05);
+}
+
+.scene-pulse {
+  animation: scene-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes scene-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-pulse {
+    animation: none;
+    opacity: 0.75;
+  }
+
+  /* Freeze SMIL on its first frame so the scene stays a still illustration. */
+  .scene-stage svg * {
+    animation: none !important;
+  }
+
+  .scene-stage svg animate,
+  .scene-stage svg animateTransform,
+  .scene-stage svg animateMotion {
+    display: none;
+  }
+}

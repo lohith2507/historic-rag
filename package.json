@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/rag.test.ts src/lib/chat-modes.test.ts"
+    "test": "tsx --test src/lib/rag.test.ts src/lib/chat-modes.test.ts src/lib/scene.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.115.0",
