@@ -6,7 +6,7 @@ Next.js app for semantic search and chat Q&A over historic Indian texts (Mahabha
 
 ![Historic India RAG workflow](docs/workflow.gif)
 
-Offline ingest builds the vector store once. At runtime the app embeds the user question, retrieves ranked passages, and (in chat) streams a grounded answer. Follow-ups switch modes for more background, a full battle story, or an encounter inventory.
+Offline ingest builds the vector store once. At runtime the app embeds the user question, retrieves ranked passages, and (in chat) streams a grounded answer, then may draw a sanitized animated SVG scene from that context. Follow-ups switch modes for more background, a full battle story, or an encounter inventory.
 
 ### Architecture
 
@@ -80,6 +80,7 @@ cp .env.example .env.local
 | `OPENROUTER_API_KEY` | ingest + app | Required |
 | `OPENROUTER_CHAT_MODEL` | app | Optional; defaults to `openai/gpt-4o-mini` |
 | `OPENROUTER_EMBEDDING_MODEL` | ingest + app | Optional; defaults to `openai/text-embedding-3-small` |
+| `OPENROUTER_SCENE_MODEL` | app (chat scenes) | Optional; defaults to `OPENROUTER_CHAT_MODEL` for post-answer SVG scenes |
 | `SUPABASE_URL` | ingest + app | From Supabase project settings |
 | `SUPABASE_SERVICE_ROLE_KEY` | ingest + app | Service role key (server-side only) |
 
@@ -130,7 +131,7 @@ Place these gitignored PDFs at the repo root before ingesting:
 ## API routes
 
 - `POST /api/search` — embed query, return ranked passages
-- `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode)
+- `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode), then optionally attach a sanitized animated SVG scene
 
 These public API routes call OpenRouter and spend credits per request.
 
