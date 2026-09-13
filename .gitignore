@@ -48,6 +48,8 @@ __pycache__/
 
 # local / agent artifacts
 *.pdf
+# corpus text downloaded by scripts/ingest.py on first run
+ramayana_griffith.txt
 .superpowers/
 graphify-out/
 .cursor/

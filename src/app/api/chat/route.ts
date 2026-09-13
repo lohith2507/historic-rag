@@ -8,6 +8,8 @@ import {
   type AnswerMode,
 } from "@/lib/chat-modes";
 import { getChatModel } from "@/lib/openrouter";
+import { retrieveArtwork } from "@/lib/artwork";
+import { generateIllustration } from "@/lib/illustration";
 import { buildContext, retrieveChunks } from "@/lib/rag";
 import { generateScene } from "@/lib/scene";
 import { MissingSupabaseConfigError } from "@/lib/supabase";
@@ -16,6 +18,7 @@ import type { ChunkMatch, SourceId } from "@/lib/types";
 const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const ALLOWED_SOURCES = new Set<SourceId>(["mahabharata", "ramayana", "gita"]);
 const ALLOWED_MESSAGE_ROLES = new Set(["user", "assistant"] as const);
+const EMPTY_SCENE = { imageUrl: null, svg: null, caption: null, attribution: null, sourceUrl: null };
 
 type ChatRole = "user" | "assistant";
 
@@ -465,17 +468,22 @@ export async function POST(request: Request) {
           controller.enqueue(encoder.encode(encodeSse("error", { error: "Chat stream failed" })));
         }
 
-        // The scene is drawn after the answer so it never delays the text or the citations.
-        // generateScene resolves to null on any failure; the answer simply renders without one.
+        // The scene is added after the answer so it never delays the text or the citations.
+        // Preference order: a real public-domain painting that matches the question, then a
+        // generated illustration, then the animated SVG. Each resolves to null on failure, so
+        // the answer simply renders without a scene if every source is unavailable.
         try {
           controller.enqueue(encoder.encode(encodeSse("scene-pending", { pending: true })));
 
-          const scene = await generateScene(anchorQuestion, context);
+          const scene =
+            (await retrieveArtwork(anchorQuestion, filterSource)) ??
+            (await generateIllustration(anchorQuestion, context)) ??
+            (await generateScene(anchorQuestion, context));
 
-          controller.enqueue(encoder.encode(encodeSse("scene", scene ?? { svg: null, caption: null })));
+          controller.enqueue(encoder.encode(encodeSse("scene", scene ?? EMPTY_SCENE)));
         } catch (error) {
           console.error("Scene stage failed", error);
-          controller.enqueue(encoder.encode(encodeSse("scene", { svg: null, caption: null })));
+          controller.enqueue(encoder.encode(encodeSse("scene", EMPTY_SCENE)));
         } finally {
           controller.close();
         }

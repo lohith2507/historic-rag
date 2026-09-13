@@ -21,13 +21,31 @@ OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-small
 
 `OPENROUTER_EMBEDDING_MODEL` is optional and defaults to `openai/text-embedding-3-small`.
 
-## Source PDFs
+## Sources
 
 Place these gitignored PDFs at the repo root:
 
 - `The Bhagavad Gita.pdf` for `gita`
-- `valmiki_ramayanam.pdf` for `ramayana`
 - `Menon_Ramesh-The-Complete-Mahabharata_-Volume-1-12.pdf` for `mahabharata`
+
+`ramayana` needs no PDF. The bundled `valmiki_ramayanam.pdf` is a 339-page illustrated
+abridgement (~416K characters), so the script instead downloads Griffith's complete
+*Rámáyan of Válmíki* from Project Gutenberg on first run — 2.35M characters, 493 cantos,
+public domain — and caches it as the gitignored `ramayana_griffith.txt`.
+
+## Headings
+
+Chunks carry a `heading` so retrieval and the UI can cite structure, not just a page number:
+
+| Source | Heading format | Coverage |
+|--------|----------------|----------|
+| `mahabharata` | `Canto 21: Astika Parva` | 7,633 / 7,647 |
+| `ramayana` | `Book VI (Yuddhakánda), Canto CXXX: The Consecration` | 493 / 493 |
+| `gita` | `Chapter 2` | 399 / 451 |
+
+Headings print only on the page where a canto opens, so `build_chunks` carries the last
+one forward across the pages that follow. `load_pages` captures it from the laid-out text
+before whitespace is collapsed — collapsing first would destroy the line structure.
 
 ## Run
 

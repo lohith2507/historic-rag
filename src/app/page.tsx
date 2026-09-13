@@ -21,8 +21,13 @@ type ChatSource = {
 };
 
 type ChatScene = {
-  svg: string;
+  kind?: "artwork" | "generated";
+  imageUrl?: string;
+  svg?: string;
   caption: string;
+  alt?: string;
+  attribution?: string;
+  sourceUrl?: string;
 };
 
 type SceneStatus = "idle" | "pending" | "done";
@@ -111,16 +116,51 @@ function SceneFrame({ scene, status }: { scene?: ChatScene; status?: SceneStatus
     return null;
   }
 
+  const isArtwork = scene.kind === "artwork";
+
   return (
     <figure className="mb-5 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--mist)]/40">
-      {/* Model output is sanitized server-side by sanitizeSvg; the filter guarantees grayscale. */}
-      <div
-        className="scene-stage [&>svg]:block [&>svg]:h-auto [&>svg]:w-full"
-        dangerouslySetInnerHTML={{ __html: scene.svg }}
-      />
+      {scene.imageUrl ? (
+        <div className="scene-viewport">
+          {/* eslint-disable-next-line @next/next/no-img-element -- remote image, no loader needed */}
+          <img
+            src={scene.imageUrl}
+            alt={scene.alt ?? scene.caption}
+            loading="lazy"
+            decoding="async"
+            /* Real paintings keep their colour; only generated art is forced to ink. */
+            className={`scene-kenburns ${isArtwork ? "" : "scene-stage"}`}
+          />
+          <span aria-hidden className="scene-grain" />
+        </div>
+      ) : scene.svg ? (
+        /* Fallback path: SVG is sanitized server-side by sanitizeSvg. */
+        <div
+          className="scene-stage [&>svg]:block [&>svg]:h-auto [&>svg]:w-full"
+          dangerouslySetInnerHTML={{ __html: scene.svg }}
+        />
+      ) : null}
       {scene.caption ? (
-        <figcaption className="border-t border-[var(--line)] px-4 py-2.5 font-serif text-sm italic text-[var(--muted)]">
-          {scene.caption}
+        <figcaption className="border-t border-[var(--line)] bg-white/60 px-4 py-2.5">
+          <span className="font-serif text-sm italic text-[var(--ink)]">{scene.caption}</span>
+          {scene.attribution ? (
+            <span className="mt-0.5 block text-xs text-[var(--muted)]">
+              {scene.attribution}
+              {scene.sourceUrl ? (
+                <>
+                  {" · "}
+                  <a
+                    href={scene.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="underline underline-offset-2 hover:text-[var(--ink)]"
+                  >
+                    Wikimedia Commons
+                  </a>
+                </>
+              ) : null}
+            </span>
+          ) : null}
         </figcaption>
       ) : null}
     </figure>
@@ -288,12 +328,23 @@ export default function Home() {
           }
 
           if (parsed.event === "scene") {
-            const payload = parsed.data as { svg?: unknown; caption?: unknown };
+            const payload = parsed.data as Record<string, unknown>;
+            const str = (key: string) =>
+              typeof payload[key] === "string" && payload[key].length > 0
+                ? (payload[key] as string)
+                : undefined;
+            const imageUrl = str("imageUrl");
+            const svg = str("svg");
             const scene =
-              typeof payload.svg === "string" && payload.svg.length > 0
+              imageUrl || svg
                 ? {
-                    svg: payload.svg,
-                    caption: typeof payload.caption === "string" ? payload.caption : "",
+                    kind: payload.kind === "artwork" ? ("artwork" as const) : ("generated" as const),
+                    imageUrl,
+                    svg,
+                    caption: str("caption") ?? "",
+                    alt: str("alt"),
+                    attribution: str("attribution"),
+                    sourceUrl: str("sourceUrl"),
                   }
                 : undefined;
 

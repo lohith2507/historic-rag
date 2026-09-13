@@ -64,8 +64,9 @@ This repo is safe to push publicly: `.env.local`, PDFs, `node_modules/`, and bui
 
 1. Create a Supabase project.
 2. Open **SQL Editor** and run the full contents of [`supabase/migrations/001_chunks.sql`](supabase/migrations/001_chunks.sql). This enables the `vector` extension, creates the `chunks` table, adds indexes, and defines the `match_chunks` RPC.
+3. Run [`supabase/migrations/002_artworks.sql`](supabase/migrations/002_artworks.sql) the same way. This adds the `artworks` table and the `match_artworks` RPC used to illustrate chat answers. Optional — without it, chat falls back to a generated illustration.
 
-No extra dashboard toggles are required beyond running that script.
+No extra dashboard toggles are required beyond running those scripts.
 
 ### 2. Environment variables
 
@@ -108,7 +109,23 @@ The script reads PDFs from the repo root, chunks text, embeds via OpenRouter, an
 
 See [`scripts/README.md`](scripts/README.md) for source PDF filenames and more ingest options.
 
-### 5. Deploy to Vercel
+### 5. Ingest epic artwork (optional)
+
+Chat answers are illustrated with a public-domain painting retrieved by the same vector search
+used for passages. Harvest them once:
+
+```bash
+python scripts/ingest_artworks.py --source all
+```
+
+This queries Wikimedia Commons, keeps only **public-domain and CC0** files, embeds each
+description, and upserts into the `artworks` table. Add `--dry-run --out artworks.json` to inspect
+what would be collected without embedding or writing.
+
+If this table is empty or the migration has not been run, chat falls back to a generated
+illustration, then to an animated SVG. Nothing breaks.
+
+### 6. Deploy to Vercel
 
 1. Import the repo into [Vercel](https://vercel.com).
 2. Set the same environment variables from step 2 in the Vercel project settings.
@@ -120,13 +137,18 @@ Live demo: [https://historic-rag.vercel.app](https://historic-rag.vercel.app)
 
 ## Corpus
 
-Place these gitignored PDFs at the repo root before ingesting:
+| `source` id | Text | Provided how |
+|-------------|------|--------------|
+| `gita` | `The Bhagavad Gita.pdf` | gitignored PDF at the repo root |
+| `mahabharata` | `Menon_Ramesh-The-Complete-Mahabharata_-Volume-1-12.pdf` | gitignored PDF at the repo root |
+| `ramayana` | Griffith, *The Rámáyan of Válmíki* (public domain) | downloaded from Project Gutenberg on first ingest |
 
-| File | `source` id |
-|------|-------------|
-| `The Bhagavad Gita.pdf` | `gita` |
-| `valmiki_ramayanam.pdf` | `ramayana` |
-| `Menon_Ramesh-The-Complete-Mahabharata_-Volume-1-12.pdf` | `mahabharata` |
+The bundled `valmiki_ramayanam.pdf` is **not** used: it is a 339-page illustrated abridgement
+(~416K characters against the Mahabharata's 11.6M), which left Ramayana retrieval running on a
+fraction of the epic. The Gutenberg text is 2.35M characters across 493 cantos.
+
+Every chunk also carries a `heading` (`Canto 21: Astika Parva`, `Book VI (Yuddhakánda), Canto CXXX:
+The Consecration`, `Chapter 2`). See [`scripts/README.md`](scripts/README.md) for coverage.
 
 ## API routes
 
