@@ -84,6 +84,8 @@ cp .env.example .env.local
 | `OPENROUTER_SCENE_MODEL` | app (chat scenes) | Optional; defaults to `OPENROUTER_CHAT_MODEL` for post-answer SVG scenes |
 | `SUPABASE_URL` | ingest + app | From Supabase project settings |
 | `SUPABASE_SERVICE_ROLE_KEY` | ingest + app | Service role key (server-side only) |
+| `POLLINATIONS_TOKEN` | app (illustrations) | Optional; without it Pollinations images are watermarked and rate-limited |
+| `ILLUSTRATION_SECRET` | app (illustrations) | Optional; signs illustration proxy URLs (falls back to `OPENROUTER_API_KEY`) |
 
 **Security:** Never commit `.env.local` or paste API keys into chat or issues. If a key is exposed, rotate it immediately in OpenRouter and Supabase.
 
@@ -153,7 +155,7 @@ The Consecration`, `Chapter 2`). See [`scripts/README.md`](scripts/README.md) fo
 ## API routes
 
 - `POST /api/search` — embed query, return ranked passages
-- `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode), then optionally attach a sanitized animated SVG scene
+- `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode), then illustrate with a matched public-domain artwork when available (else a generated image, else a sanitized animated SVG scene)
 
 These public API routes call OpenRouter and spend credits per request.
 
@@ -163,6 +165,7 @@ After completing setup and ingest, verify:
 
 - [ ] **Search** — A Gita-related query (e.g. "What does Krishna say about duty?") returns relevant passages with source and page badges.
 - [ ] **Chat** — Chat mode streams an answer grounded in retrieved context; irrelevant queries are refused when context is empty.
+- [ ] **Illustration** — After chat answers, an artwork, generated illustration, or SVG scene appears (artwork needs `002_artworks.sql` + optional artwork ingest).
 - [ ] **No secrets in git** — `.env.local` is gitignored; no API keys appear in tracked files or commit history.
 - [ ] **Build passes** — `npm run build` completes without errors.
 
