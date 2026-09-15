@@ -1,12 +1,12 @@
-# PDF Ingest Script
+# Ingest Scripts
 
-Use `ingest.py` to extract, chunk, embed, and insert the local PDFs into the Supabase `chunks` table.
+Offline helpers that fill Supabase before the Next.js app can search or illustrate.
 
 ## Setup
 
 Install the Python dependencies:
 
-```powershell
+```bash
 python -m pip install -r scripts/requirements.txt
 ```
 
@@ -21,7 +21,11 @@ OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-small
 
 `OPENROUTER_EMBEDDING_MODEL` is optional and defaults to `openai/text-embedding-3-small`.
 
-## Sources
+## PDF / text ingest (`ingest.py`)
+
+Use `ingest.py` to extract, chunk, embed, and insert the local PDFs into the Supabase `chunks` table.
+
+### Sources
 
 Place these gitignored PDFs at the repo root:
 
@@ -33,7 +37,7 @@ abridgement (~416K characters), so the script instead downloads Griffith's compl
 *Rámáyan of Válmíki* from Project Gutenberg on first run — 2.35M characters, 493 cantos,
 public domain — and caches it as the gitignored `ramayana_griffith.txt`.
 
-## Headings
+### Headings
 
 Chunks carry a `heading` so retrieval and the UI can cite structure, not just a page number:
 
@@ -47,32 +51,55 @@ Headings print only on the page where a canto opens, so `build_chunks` carries t
 one forward across the pages that follow. `load_pages` captures it from the laid-out text
 before whitespace is collapsed — collapsing first would destroy the line structure.
 
-## Run
+### Run
 
 Dry-run extraction and chunk counts without API calls:
 
-```powershell
+```bash
 python scripts/ingest.py --source gita --dry-run
 ```
 
 Ingest one source:
 
-```powershell
+```bash
 python scripts/ingest.py --source gita
 ```
 
 Ingest all sources:
 
-```powershell
+```bash
 python scripts/ingest.py --source all
 ```
 
 Non-dry runs delete existing rows for each selected source, call OpenRouter embeddings in batches, and insert fresh rows into `chunks`.
 
-## Tests
+### Tests
 
 Run the ingest unit tests from the repo root:
 
-```powershell
+```bash
 python -m unittest scripts.test_ingest
+```
+
+## Artwork ingest (`ingest_artworks.py`)
+
+Optional. Harvests **public-domain and CC0** epic paintings from Wikimedia Commons into the
+`artworks` table (requires [`supabase/migrations/002_artworks.sql`](../supabase/migrations/002_artworks.sql)).
+Chat uses matched artworks to illustrate answers; if the table is empty, it falls back to a
+generated image, then an animated SVG.
+
+```bash
+python scripts/ingest_artworks.py --source all
+```
+
+Useful flags:
+
+- `--source gita|ramayana|mahabharata|all` — epic to harvest (default `all`)
+- `--dry-run` — collect metadata without embedding or writing
+- `--out artworks.json` — write harvested metadata to a JSON file (often paired with `--dry-run`)
+
+Example dry-run:
+
+```bash
+python scripts/ingest_artworks.py --source gita --dry-run --out artworks.json
 ```
