@@ -67,6 +67,8 @@ test("buildPollinationsUrl encodes the prompt and pins the style parameters", ()
   assert.equal(url.searchParams.get("private"), "true");
   assert.ok(Number(url.searchParams.get("width")) > 0);
   assert.ok(Number(url.searchParams.get("height")) > 0);
+  assert.doesNotMatch(decodeURIComponent(url.pathname), /grayscale|monochrome/i);
+  assert.match(decodeURIComponent(url.pathname), /full color|classical Indian epic painting/i);
 });
 
 test("buildPollinationsUrl attaches the token only when one is configured", () => {

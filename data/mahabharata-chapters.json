@@ -1,0 +1,710 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction",
+    "description": "What is the Mahabharata and its significance in our life even in the 21st century",
+    "source": "mahabharata"
+  },
+  {
+    "id": 2,
+    "title": "The Writing",
+    "description": "How the Mahabharata came to be conceived by Vyasa and written by Ganesha",
+    "source": "mahabharata"
+  },
+  {
+    "id": 3,
+    "title": "Shantanu and Ganga",
+    "description": "The story of King Shantanu and his extraordinary marriage with Goddess Ganga",
+    "source": "mahabharata"
+  },
+  {
+    "id": 4,
+    "title": "Devavrata becomes Bhishma",
+    "description": "Devavrata makes an unselfish promise for the love of his father and becomes Bhishma",
+    "source": "mahabharata"
+  },
+  {
+    "id": 5,
+    "title": "Amba's Revenge",
+    "description": "Bhishma kidnaps the Kasi sisters and Amba vows to be the reason for Bhishma's death",
+    "source": "mahabharata"
+  },
+  {
+    "id": 6,
+    "title": "The Missing Links",
+    "description": "The extraordinary story of the birth of Dhritarashtra, Pandu and Vidura after the death of Vichitraveerya",
+    "source": "mahabharata"
+  },
+  {
+    "id": 7,
+    "title": "Kunti and her Children",
+    "description": "The birth of Karna, the birth of the Pandavas and the Kauravas",
+    "source": "mahabharata"
+  },
+  {
+    "id": 8,
+    "title": "Duryodhana's Jealousy",
+    "description": "Duryodhana - the entitled son of Dhritarashtra devices ways to get rid of the Pandavas",
+    "source": "mahabharata"
+  },
+  {
+    "id": 9,
+    "title": "Dronacharya",
+    "description": "Drona - the Brahmana, masters weapons and becomes Dronacharya, while developing a hatred for his childhood friend Drupada",
+    "source": "mahabharata"
+  },
+  {
+    "id": 10,
+    "title": "Life at the Gurukula",
+    "description": "Dronacharya teaches the Pandavas and Kauravas and one student surpasses all others in skill and perseverence",
+    "source": "mahabharata"
+  },
+  {
+    "id": 11,
+    "title": "Ekalavya",
+    "description": "The tribal boy who poses a threat to Arjuna's reputation and his immense gratitude for his Guru",
+    "source": "mahabharata"
+  },
+  {
+    "id": 12,
+    "title": "Performance of the Princes",
+    "description": "The princes showcase their talent and a mystery man enters",
+    "source": "mahabharata"
+  },
+  {
+    "id": 13,
+    "title": "Karna's Present",
+    "description": "Karna challenges Arjuna and Duryodhana saves him from humiliation",
+    "source": "mahabharata"
+  },
+  {
+    "id": 14,
+    "title": "Karna's History",
+    "description": "The history of Karna's upbringing and the curses he receives",
+    "source": "mahabharata"
+  },
+  {
+    "id": 15,
+    "title": "School is out",
+    "description": "Drona demands a fee - the capture of his childhood friend",
+    "source": "mahabharata"
+  },
+  {
+    "id": 16,
+    "title": "Jackal and his Friends",
+    "description": "Dhritarashtra's minister tells the king the story of the jackal and his friends and cautions the king against the Pandavas",
+    "source": "mahabharata"
+  },
+  {
+    "id": 17,
+    "title": "Shakuni",
+    "description": "Given a raw deal, Shakuni - the uncle, vows to bring down the Kuru race",
+    "source": "mahabharata"
+  },
+  {
+    "id": 18,
+    "title": "The Wax Palace",
+    "description": "Duryodhana and Shakuni scheme to put an end to the Pandavas",
+    "source": "mahabharata"
+  },
+  {
+    "id": 19,
+    "title": "Ghatotkacha",
+    "description": "Bhima defeats a Rakshasa, marries another and begets a powerful son",
+    "source": "mahabharata"
+  },
+  {
+    "id": 20,
+    "title": "Bakasura",
+    "description": "Bhima saves the town of Ekachakra by defeating another Rakshasa",
+    "source": "mahabharata"
+  },
+  {
+    "id": 21,
+    "title": "Draupadi and Dhrishtadyumna",
+    "description": "Drupada performs a Yajna to defeat Drona by obtaining a son and a daughter",
+    "source": "mahabharata"
+  },
+  {
+    "id": 22,
+    "title": "Draupadi's Swayamvara",
+    "description": "Arjuna, dressed as an unassuming Brahmana, wins the impossible Swayamvara designed by King Drupada and marries Draupadi",
+    "source": "mahabharata"
+  },
+  {
+    "id": 23,
+    "title": "Draupadi weds the 5 Pandavas",
+    "description": "Taking Kunti's words as gospel, the Pandavas marry Draupadi and realize the truth behind this extraordinary turn of events from Sage Vyasa",
+    "source": "mahabharata"
+  },
+  {
+    "id": 24,
+    "title": "The Return of the Pandavas",
+    "description": "The Pandavas return and peace is restored - so it seems",
+    "source": "mahabharata"
+  },
+  {
+    "id": 25,
+    "title": "Arjuna's Exile",
+    "description": "The Pandavas make an unbreakable vow and Arjuna breaks it.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 26,
+    "title": "Arjuna Weds Subhadra",
+    "description": "Arjuna travels extensively in his exile and has powerful children including the illustrious Abhimanyu",
+    "source": "mahabharata"
+  },
+  {
+    "id": 27,
+    "title": "Arjuna gets the Gandiva",
+    "description": "Several incidents come together at the right time so Arjuna could get the Gandiva and Krishna could get the Sudarshana Chakra",
+    "source": "mahabharata"
+  },
+  {
+    "id": 28,
+    "title": "Yudhishtira's Desire",
+    "description": "Narada relates Pandu's wishes to Yudhishtira who contemplates performing the Rajasuya Yajna",
+    "source": "mahabharata"
+  },
+  {
+    "id": 29,
+    "title": "Jarasandha",
+    "description": "Krishna combats the biggest threat to Yudhishtira becoming an emperor with his shrewd thinking. An extraordinary birth makes Jarasandha an invincible foe.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 30,
+    "title": "Rajasuya",
+    "description": "Yudhishtira performa the Rajasuya Yajna after all opposition is out of the way. But so he thought. One last threat remained in the form of Shishupala.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 31,
+    "title": "Shakuni's Strategy",
+    "description": "Duryodhana struggles to accept the rise of the Pandavas. Shakuni devises a clever strategy to get the better of them.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 32,
+    "title": "The Game of Dice",
+    "description": "Yudhishtira reluctantly agrees to play the game of dice. Shakuni dazzles with the dice he made from his father's bones.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 33,
+    "title": "The Humiliation of Draupadi",
+    "description": "Draupadi is humiliated by the Kauravas. The Pandavas blaze in rage.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 34,
+    "title": "Pandavas in the Forest",
+    "description": "The Pandavas lament in the forest. Krishna consoles them.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 35,
+    "title": "Arjuna Battles Shiva",
+    "description": "Arjuna seeks celestial weapons. Shiva comes in disguise.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 36,
+    "title": "Arjuna and Urvashi",
+    "description": "Arjuna travels to Indraloka and meets Urvashi",
+    "source": "mahabharata"
+  },
+  {
+    "id": 37,
+    "title": "Nala and Damayanti",
+    "description": "Yudhishtira laments, but the story of Nala consoles him.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 38,
+    "title": "Bhima meets Hanuman",
+    "description": "Bhima meets a monkey who is more than his match.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 39,
+    "title": "Nahusha Questions Yudhishtira",
+    "description": "A snake captures Bhima and questions Yudhishtira.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 40,
+    "title": "Yudhishtira's Compassion",
+    "description": "Duryodhana wishes to see the Pandavas in suffering.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 41,
+    "title": "Karna - The Generous",
+    "description": "Karna takes the Asura vow to appease Duryodhana and creates a legacy for himself",
+    "source": "mahabharata"
+  },
+  {
+    "id": 42,
+    "title": "A grain will do",
+    "description": "Durvasa puts the Pandavas in a delicate situation.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 43,
+    "title": "Draupadi is Kidnapped",
+    "description": "Jayadratha kidnaps Draupadi only to incur the wrath of the Pandavas.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 44,
+    "title": "Karna keeps his Promise",
+    "description": "Indra visits Karna to ask for his most priced possession",
+    "source": "mahabharata"
+  },
+  {
+    "id": 45,
+    "title": "The Death of the Pandavas",
+    "description": "Four Pandava brothers fall to a Yaksha. It is up to Yudhishtira to save them.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 46,
+    "title": "The Yaksha’s Questions",
+    "description": "The Yaksha questions Yudhishtira on Dharma.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 47,
+    "title": "Yudhishtira's Dharma",
+    "description": "Yudhishtira exhibits supreme Dharma",
+    "source": "mahabharata"
+  },
+  {
+    "id": 48,
+    "title": "The Thirteenth Year",
+    "description": "The Pandavas go into hiding in the thirteenth year of exile.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 49,
+    "title": "The Wrestling Match",
+    "description": "Kichaka humiliates Draupadi and faces Bhima's wrath.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 50,
+    "title": "Virata Attacked",
+    "description": "The Kauravas attack Virata. The Pandavas help their host.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 51,
+    "title": "Arjuna Trounces the Kaurava Army",
+    "description": "Brihannala a.k.a Arjuna faces the Kauravas in battle.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 52,
+    "title": "The Pandavas Resurface",
+    "description": "The Pandavas return and strategize their next steps.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 53,
+    "title": "Krishna and his Army",
+    "description": "Duryodhana and Arjuna seek Krishna's support in the impending war.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 54,
+    "title": "Shalya joins the Kauravas",
+    "description": "Shalya is all set to join the Pandavas, until Duryodhana strategizes.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 55,
+    "title": "Peace Talks",
+    "description": "Several rounds of peace talks are attempted in vain.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 56,
+    "title": "Vidura Neeti",
+    "description": "Dhritarashtra is in misery. Vidura shares his wisdom.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 57,
+    "title": "Five villages",
+    "description": "Sanjaya relates Yudhishtira's plea, but Duryodhana is not one to listen.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 58,
+    "title": "Vishwaroopa",
+    "description": "A last ditch attempt by Krishna to make peace.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 59,
+    "title": "The son of Surya",
+    "description": "Karna learns the truth of his origin.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 60,
+    "title": "Kunti meets Karna",
+    "description": "Father, mother and son unite for the first time.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 61,
+    "title": "One day to go",
+    "description": "Plans before the day of the war in full swing.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 62,
+    "title": "Kurukshetra",
+    "description": "The armies assemble in the Kurukshetra battlefield",
+    "source": "mahabharata"
+  },
+  {
+    "id": 63,
+    "title": "Bhagavad Gita Introduction",
+    "description": "The Bhagavad Gita and its importance in the 21st century",
+    "source": "mahabharata"
+  },
+  {
+    "id": 64,
+    "title": "Bhagavad Gita Ch 1 - arjunaviṣādayogaḥ",
+    "description": "The Yoga of Arjuna’s Dejection",
+    "source": "mahabharata"
+  },
+  {
+    "id": 65,
+    "title": "Bhagavad Gita Ch 2 - sāṅkhyayogaḥ",
+    "description": "The Yoga of Analysis",
+    "source": "mahabharata"
+  },
+  {
+    "id": 66,
+    "title": "Bhagavad Gita Ch 3 - karmayogaḥ",
+    "description": "The Yoga of Action",
+    "source": "mahabharata"
+  },
+  {
+    "id": 67,
+    "title": "Bhagavad Gita Ch 4 - jñānakarmasaṃnyāsayogaḥ",
+    "description": "The Yoga of Knowledge",
+    "source": "mahabharata"
+  },
+  {
+    "id": 68,
+    "title": "Bhagavad Gita Ch 5 - karmasaṃnyāsayogaḥ",
+    "description": "The Yoga of Renunciation",
+    "source": "mahabharata"
+  },
+  {
+    "id": 69,
+    "title": "Bhagavad Gita Ch 6 - dhyānayogaḥ",
+    "description": "The Yoga of Meditation",
+    "source": "mahabharata"
+  },
+  {
+    "id": 70,
+    "title": "Bhagavad Gita Ch 7 - jñānavijñānayogaḥ",
+    "description": "The Yoga of Wisdom",
+    "source": "mahabharata"
+  },
+  {
+    "id": 71,
+    "title": "Bhagavad Gita Ch 8 - akṣarabrahmayogaḥ",
+    "description": "The Yoga of Liberating Spirit",
+    "source": "mahabharata"
+  },
+  {
+    "id": 72,
+    "title": "Bhagavad Gita Ch 9 - rājavidyārājaguhyayogaḥ",
+    "description": "The Yoga of Royal and Hidden Knowledge",
+    "source": "mahabharata"
+  },
+  {
+    "id": 73,
+    "title": "Bhagavad Gita Ch 10 - vibhūtiyogaḥ",
+    "description": "The Yoga of Excellence",
+    "source": "mahabharata"
+  },
+  {
+    "id": 74,
+    "title": "Bhagavad Gita Ch 11 - viśvarūpadarśanayogaḥ",
+    "description": "The Yoga of Seeing the Cosmic Form",
+    "source": "mahabharata"
+  },
+  {
+    "id": 75,
+    "title": "Bhagavad Gita Ch 12 - bhaktiyogaḥ",
+    "description": "The Yoga of Devotion",
+    "source": "mahabharata"
+  },
+  {
+    "id": 76,
+    "title": "Bhagavad Gita Ch 13 - kṣetrakṣetrajñavibhāgayogaḥ",
+    "description": "The Yoga of Distinguishing Matter from Spirit",
+    "source": "mahabharata"
+  },
+  {
+    "id": 77,
+    "title": "Bhagavad Gita Ch 14 - guṇatrayavibhāgayogaḥ",
+    "description": "The Yoga of the Threefold Modalities",
+    "source": "mahabharata"
+  },
+  {
+    "id": 78,
+    "title": "Bhagavad Gita Ch 15 - puruṣottamayogaḥ",
+    "description": "The Yoga of the Ultimate Person",
+    "source": "mahabharata"
+  },
+  {
+    "id": 79,
+    "title": "Bhagavad Gita Ch 16 - daivāsurasaṃpadvibhāgayogaḥ",
+    "description": "The Yoga of Differentiating Godly and Ungodly Assets",
+    "source": "mahabharata"
+  },
+  {
+    "id": 80,
+    "title": "Bhagavad Gita Ch 17 - śraddhātrayavibhāgayogaḥ",
+    "description": "The Yoga of Differentiating Threefold Faith",
+    "source": "mahabharata"
+  },
+  {
+    "id": 81,
+    "title": "Bhagavad Gita Ch 18 - mokṣasaṃnyāsayogaḥ",
+    "description": "The Yoga of Liberation",
+    "source": "mahabharata"
+  },
+  {
+    "id": 82,
+    "title": "Bhagavad Gita - Conclusion",
+    "description": "Concluding words on the Bhagavad Gita",
+    "source": "mahabharata"
+  },
+  {
+    "id": 83,
+    "title": "War begins",
+    "description": "Day 1 and 2 of the Kurukshetra war.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 84,
+    "title": "Krishna’s Anger",
+    "description": "Krishna is angry with Arjuna's controlled approach.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 85,
+    "title": "Four More Days",
+    "description": "Days 4,5,6,7 of the Kurukshetra war.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 86,
+    "title": "Duryodhana Pushes Bhishma",
+    "description": "Duryodhana taunts Bhishma and questions his loyalty.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 87,
+    "title": "Bhishma at his Best",
+    "description": "Bhishma makes a vow to fight his best. The Pandavas are wrattled.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 88,
+    "title": "The Fall of Bhishma",
+    "description": "The son of Ganga falls on the 10th day.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 89,
+    "title": "Karna and Bhishma",
+    "description": "Karna pays respects to the Grandsire.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 90,
+    "title": "Drona the Commander",
+    "description": "Drona becomes the commander of the Kaurava army.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 91,
+    "title": "Bhagadatta and His Elephant",
+    "description": "Bhagadatta and his elephant Supratika torment the Pandava army.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 92,
+    "title": "Chakravyuha",
+    "description": "Arjuna's son proves his valor, but he stands alone.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 93,
+    "title": "The Fall of Abhimanyu",
+    "description": "A show of bravery followed by a barbaric act.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 94,
+    "title": "Arjuna’s Vow",
+    "description": "The devastated Arjuna makes a vow that could end his own life.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 95,
+    "title": "Impossible task",
+    "description": "Arjuna races against time to avenge the death of his son.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 96,
+    "title": "Battle Continues into the Night",
+    "description": "Rage outshines rules of warfare and battle continues into the night.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 97,
+    "title": "The Might of Ghatotkacha",
+    "description": "Bhima's son wreaks havoc upon the Kaurava army. Karna is forced to act.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 98,
+    "title": "The Might of Drona",
+    "description": "Drona fights like a madman before an unthinkable lie stops him",
+    "source": "mahabharata"
+  },
+  {
+    "id": 99,
+    "title": "Narayanastra",
+    "description": "The enraged Ashwatthama uses a forbidden weapon. Krishna comes to the rescue.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 100,
+    "title": "Karna the Commander",
+    "description": "Karna takes charge of the Kaurava army.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 101,
+    "title": "The Fall of Dusshasana",
+    "description": "Bhima's vow takes fruition. Dusshasana breathes his last.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 102,
+    "title": "Karna and Arjuna",
+    "description": "Karna finally meets Arjuna one on one.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 103,
+    "title": "The Ultimate Battle",
+    "description": "The battle of battles between Dharma and Adharma.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 104,
+    "title": "The Eighteenth day",
+    "description": "The last of the Kaurava warriors fall. Duryodhana stands tall.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 105,
+    "title": "Gadayuddha",
+    "description": "Duryodhana battles Bhima with his favorite weapon.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 106,
+    "title": "The Massacre",
+    "description": "Vengence leads Ashwatthama to an unthinkable act.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 107,
+    "title": "Cursed for Life",
+    "description": "Ashwatthama panics. Krishna curses him to live for thousands of years in torture.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 108,
+    "title": "The Iron Statue",
+    "description": "The Pandavas pay their respects to the elders.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 109,
+    "title": "The Eldest Pandava",
+    "description": "A shocking truth is revealed.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 110,
+    "title": "The Passing of Bhishma",
+    "description": "Bhishma reveals a wealth of wisdom to Yudhishtira, including the true meaning of the Lord",
+    "source": "mahabharata"
+  },
+  {
+    "id": 111,
+    "title": "Ashwamedha Yajna",
+    "description": "A mongoose narrates a story to describe the importance of donation without calculation",
+    "source": "mahabharata"
+  },
+  {
+    "id": 112,
+    "title": "A Generation Ends",
+    "description": "Time reigns supreme and the end of a generation comes about. The mantle is passed on.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 113,
+    "title": "The End of the Yadavas",
+    "description": "The Yadavas meet their destruction at their own hands. Gandhari's curse takes effect.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 114,
+    "title": "Krishna and Jara",
+    "description": "Having served the purpose of his human birth, Krishna seeks his own end.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 115,
+    "title": "Arjuna faces Defeat",
+    "description": "Arjuna faces defeat in the unlikeliest of circumstances.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 116,
+    "title": "The Final Journey",
+    "description": "The Pandavas make their final journey.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 117,
+    "title": "Yudhishtira’s Companion",
+    "description": "Yudhishtira imparts lessons on Dharma. A lone companion follows him.",
+    "source": "mahabharata"
+  },
+  {
+    "id": 118,
+    "title": "Yudhishtira in Heaven",
+    "description": "Yudhishtira reaps the fruits of his single Adharmic act.",
+    "source": "mahabharata"
+  }
+]

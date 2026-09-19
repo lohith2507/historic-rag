@@ -116,8 +116,6 @@ function SceneFrame({ scene, status }: { scene?: ChatScene; status?: SceneStatus
     return null;
   }
 
-  const isArtwork = scene.kind === "artwork";
-
   return (
     <figure className="mb-5 overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--mist)]/40">
       {scene.imageUrl ? (
@@ -128,8 +126,7 @@ function SceneFrame({ scene, status }: { scene?: ChatScene; status?: SceneStatus
             alt={scene.alt ?? scene.caption}
             loading="lazy"
             decoding="async"
-            /* Real paintings keep their colour; only generated art is forced to ink. */
-            className={`scene-kenburns ${isArtwork ? "" : "scene-stage"}`}
+            className="scene-kenburns"
           />
           <span aria-hidden className="scene-grain" />
         </div>

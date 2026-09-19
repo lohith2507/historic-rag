@@ -8,6 +8,7 @@ import {
   type AnswerMode,
 } from "@/lib/chat-modes";
 import { getChatModel } from "@/lib/openrouter";
+import { enrichVisualQuery, matchEpicTopic } from "@/lib/epic-topics";
 import { retrieveArtwork } from "@/lib/artwork";
 import { generateIllustration } from "@/lib/illustration";
 import { buildContext, retrieveChunks } from "@/lib/rag";
@@ -468,16 +469,18 @@ export async function POST(request: Request) {
           controller.enqueue(encoder.encode(encodeSse("error", { error: "Chat stream failed" })));
         }
 
-        // The scene is added after the answer so it never delays the text or the citations.
         // Preference order: a real public-domain painting that matches the question, then a
-        // generated illustration, then the animated SVG. Each resolves to null on failure, so
-        // the answer simply renders without a scene if every source is unavailable.
+        // full-colour generated illustration, then the animated SVG. Each resolves to null on
+        // failure, so the answer simply renders without a scene if every source is unavailable.
         try {
           controller.enqueue(encoder.encode(encodeSse("scene-pending", { pending: true })));
 
+          const topic = matchEpicTopic(anchorQuestion, filterSource ?? "");
+          const visualQuery = enrichVisualQuery(anchorQuestion, topic);
+
           const scene =
-            (await retrieveArtwork(anchorQuestion, filterSource)) ??
-            (await generateIllustration(anchorQuestion, context)) ??
+            (await retrieveArtwork(anchorQuestion, filterSource, visualQuery)) ??
+            (await generateIllustration(anchorQuestion, context, topic?.visualFocus)) ??
             (await generateScene(anchorQuestion, context));
 
           controller.enqueue(encoder.encode(encodeSse("scene", scene ?? EMPTY_SCENE)));

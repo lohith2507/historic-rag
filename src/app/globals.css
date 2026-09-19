@@ -33,9 +33,9 @@ select {
   font: inherit;
 }
 
-/* Belt and braces on the scene prompt: whatever colours the model reaches for, the plate reads as ink. */
+/* Scene plate container — colour is preserved for paintings and generated images. */
 .scene-stage {
-  filter: grayscale(1) contrast(1.05);
+  /* reserved for SVG fallback layout helpers */
 }
 
 .scene-viewport {
@@ -61,7 +61,7 @@ select {
   position: absolute;
   inset: -25%;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.12;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: scene-grain-drift 1.4s steps(4) infinite;
@@ -70,11 +70,11 @@ select {
 @keyframes scene-reveal {
   from {
     opacity: 0;
-    filter: grayscale(1) contrast(1.05) blur(12px);
+    filter: blur(10px);
   }
   to {
     opacity: 1;
-    filter: grayscale(1) contrast(1.05) blur(0);
+    filter: blur(0);
   }
 }
 

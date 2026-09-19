@@ -154,5 +154,5 @@ test("buildScenePrompt includes the question and the passages", () => {
   assert.match(prompt, /Karna or Arjuna/);
   assert.match(prompt, /The wheel sank/);
   assert.match(prompt, /CAPTION:/);
-  assert.match(prompt, /grayscale/i);
+  assert.match(prompt, /colourful|indigo|ochre|crimson/i);
 });

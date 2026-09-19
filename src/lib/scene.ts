@@ -136,7 +136,7 @@ export function buildScenePrompt(question: string, context: string): string {
     "",
     "SVG rules:",
     '- Root must be <svg viewBox="0 0 640 360"> with no width or height attributes.',
-    "- Grayscale only: #14202f, #3c4858, #7b8794, #b9c2cb, #e7e3da, #ffffff. No other colours.",
+    "- Use a limited but colourful palette inspired by classical Indian painting: deep indigo, ochre, crimson, sage, ivory, charcoal. Flat shapes are fine.",
     "- Flat geometric shapes and silhouettes: chariots, bows, arrows, arcs, banners, figures. No text labels beyond 4 words.",
     "- It must move. Use SMIL <animate> and <animateTransform> with repeatCount=\"indefinite\" and a 3-5 second loop.",
     "- Animate meaningful things: arrows in flight, a sinking wheel, advancing ranks, a drawn bowstring, rising dust.",

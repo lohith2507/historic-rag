@@ -10,10 +10,11 @@ const MAX_PROMPT_LENGTH = 320;
 const MAX_CAPTION_LENGTH = 120;
 const MAX_CONTEXT_LENGTH = 2_600;
 
-/** Locks every illustration to one aesthetic so the panel reads as a consistent plate. */
+/** Full-colour classical epic painting style — not grayscale. */
 const STYLE_SUFFIX =
-  "monochrome ink wash painting, grayscale, textured handmade paper, classical Indian epic art, " +
-  "dramatic chiaroscuro, fine brushwork, no text, no lettering, no watermark, no signature";
+  "full color classical Indian epic painting, rich pigments, oil on canvas look, " +
+  "detailed costumes and jewellery, dramatic lighting, historical manuscript illustration style, " +
+  "photorealistic faces avoided, no text, no lettering, no watermark, no signature";
 
 export type Illustration = {
   imageUrl: string;
@@ -26,20 +27,28 @@ type Completion = {
   error?: { message?: string };
 };
 
-export function buildDistillPrompt(question: string, context: string): string {
+export function buildDistillPrompt(
+  question: string,
+  context: string,
+  visualFocus?: string,
+): string {
   return [
     "You turn passages from the Indian epics into a prompt for an image generator.",
     "Describe only a scene the passages actually support. Never invent events they do not contain.",
+    "Prefer a concrete, colourful epic moment a viewer would recognise from the texts.",
     "",
     `Question: ${question}`,
+    visualFocus ? `Chapter focus (use only if it fits the passages): ${visualFocus}` : "",
     "",
     "Reply with exactly two lines and nothing else:",
-    "PROMPT: <one vivid visual sentence, under 40 words, describing the single most striking moment in the passages. Name concrete subjects, action, and setting. No style words, no artist names, no text-in-image instructions.>",
+    "PROMPT: <one vivid visual sentence, under 40 words, describing the single most striking moment in the passages. Name concrete subjects, action, setting, and colours or materials when clear. No style words, no artist names, no text-in-image instructions.>",
     "CAPTION: <under 10 words naming that moment for a reader>",
     "",
     "Passages:",
     context.slice(0, MAX_CONTEXT_LENGTH) || "No relevant passages were retrieved.",
-  ].join("\n");
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
 }
 
 function readLabelledLine(raw: string, label: string): string | null {
@@ -144,6 +153,7 @@ export function getIllustrationSecret(): string {
 export async function generateIllustration(
   question: string,
   context: string,
+  visualFocus?: string,
 ): Promise<Illustration | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   const secret = getIllustrationSecret();
@@ -163,7 +173,7 @@ export async function generateIllustration(
         model: getSceneModel(),
         temperature: 0.5,
         max_tokens: 160,
-        messages: [{ role: "user", content: buildDistillPrompt(question, context) }],
+        messages: [{ role: "user", content: buildDistillPrompt(question, context, visualFocus) }],
       }),
     });
 

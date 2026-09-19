@@ -3,7 +3,7 @@ import { getServiceSupabase } from "./supabase";
 import type { SourceId } from "./types";
 
 /** Below this cosine similarity the painting is more distracting than illustrative. */
-export const ARTWORK_MIN_SIMILARITY = 0.42;
+export const ARTWORK_MIN_SIMILARITY = 0.36;
 
 export type ArtworkRow = {
   id: string;
@@ -67,12 +67,13 @@ export function toArtworkScene(row: ArtworkRow): ArtworkScene | null {
 export async function retrieveArtwork(
   question: string,
   source?: SourceId,
+  visualQuery?: string,
 ): Promise<ArtworkScene | null> {
   try {
-    const queryEmbedding = await embedText(question);
+    const queryEmbedding = await embedText(visualQuery?.trim() || question);
     const { data, error } = await getServiceSupabase().rpc("match_artworks", {
       query_embedding: queryEmbedding,
-      match_count: 1,
+      match_count: 3,
       filter_source: source ?? null,
     });
 
@@ -81,9 +82,17 @@ export async function retrieveArtwork(
       return null;
     }
 
-    const row = ((data ?? []) as ArtworkRow[])[0];
+    const rows = (data ?? []) as ArtworkRow[];
 
-    return row ? toArtworkScene(row) : null;
+    for (const row of rows) {
+      const scene = toArtworkScene(row);
+
+      if (scene) {
+        return scene;
+      }
+    }
+
+    return null;
   } catch (error) {
     console.error("Artwork retrieval failed", error);
     return null;
