@@ -103,3 +103,14 @@ Example dry-run:
 ```bash
 python scripts/ingest_artworks.py --source gita --dry-run --out artworks.json
 ```
+## Topic harvest (`harvest_mahabharata_topics.py`)
+
+Offline helper that refreshes [`data/mahabharata-chapters.json`](../data/mahabharata-chapters.json) from Gurukula chapter titles and descriptions (text only, no images). The JSON powers full-color chat scene context.
+
+No API keys required. Run from the repo root:
+
+```bash
+python scripts/harvest_mahabharata_topics.py
+```
+
+The script overwrites `data/mahabharata-chapters.json` with the harvested chapter list.
