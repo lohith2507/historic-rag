@@ -157,6 +157,26 @@ The Consecration`, `Chapter 2`). See [`scripts/README.md`](scripts/README.md) fo
 - `POST /api/search` — embed query, return ranked passages
 - `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode), then illustrate with a matched public-domain artwork when available (else a generated image, else a sanitized animated SVG scene)
 
+Quick search request:
+
+```bash
+curl -sS http://localhost:3000/api/search \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"What does Krishna say about duty?","source":"gita","limit":5}'
+```
+
+`source` and `limit` are optional; `limit` defaults to 8 and accepts values from 1 to 20. The response is JSON with a `results` array.
+
+Quick chat request:
+
+```bash
+curl -N http://localhost:3000/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"messages":[{"role":"user","content":"Who is stronger, Karna or Arjuna?"}]}'
+```
+
+Chat returns server-sent events for answer tokens, citations, and the optional illustration. Add `source` to limit retrieval to `mahabharata`, `ramayana`, or `gita`.
+
 These public API routes call OpenRouter and spend credits per request.
 
 ## Acceptance checklist
