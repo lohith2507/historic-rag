@@ -103,6 +103,7 @@ Example dry-run:
 ```bash
 python scripts/ingest_artworks.py --source gita --dry-run --out artworks.json
 ```
+
 ## Topic harvest (`harvest_mahabharata_topics.py`)
 
 Offline helper that refreshes [`data/mahabharata-chapters.json`](../data/mahabharata-chapters.json) from Gurukula chapter titles and descriptions (text only, no images). The JSON powers full-color chat scene context.
@@ -114,3 +115,13 @@ python scripts/harvest_mahabharata_topics.py
 ```
 
 The script overwrites `data/mahabharata-chapters.json` with the harvested chapter list.
+
+## Workflow GIF (`make_workflow_gif.py`)
+
+Regenerates [`docs/workflow.gif`](../docs/workflow.gif), the architecture animation shown at the top of the root README.
+
+```bash
+python scripts/make_workflow_gif.py
+```
+
+Run from the repo root after editing the GIF script or its frames. The output overwrites `docs/workflow.gif`.
