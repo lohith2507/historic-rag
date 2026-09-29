@@ -156,6 +156,7 @@ The Consecration`, `Chapter 2`). See [`scripts/README.md`](scripts/README.md) fo
 
 - `POST /api/search` — embed query, return ranked passages
 - `POST /api/chat` — retrieve context, stream a grounded answer (default, more-context, battle-story, or encounters mode), then illustrate with a matched public-domain artwork when available (else a generated image, else a sanitized animated SVG scene)
+- `GET /api/illustration` — signed proxy for generated illustrations (requires `prompt`, `seed`, and `sig`; unsigned requests are rejected, so it is not an open proxy)
 
 Quick search request:
 
