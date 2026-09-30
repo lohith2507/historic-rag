@@ -199,4 +199,5 @@ After completing setup and ingest, verify:
 | `npm run start` | Serve production build |
 | `npm run lint` | Run ESLint |
 | `npm test` | Run TypeScript unit tests |
+| `python -m unittest scripts.test_ingest` | Run the Python ingest unit tests from the repo root |
 | `python scripts/make_workflow_gif.py` | Regenerate `docs/workflow.gif` |
