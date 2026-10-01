@@ -50,6 +50,8 @@ __pycache__/
 *.pdf
 # corpus text downloaded by scripts/ingest.py on first run
 ramayana_griffith.txt
+# dry-run metadata from scripts/ingest_artworks.py --out artworks.json
+artworks.json
 .superpowers/
 graphify-out/
 .cursor/
