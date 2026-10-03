@@ -168,6 +168,8 @@ curl -sS http://localhost:3000/api/search \
 
 `source` and `limit` are optional; `limit` defaults to 8 and accepts values from 1 to 20. The response is JSON with a `results` array.
 
+Invalid input (a missing or empty `query`, an unknown `source`, or an out-of-range `limit`) returns `400` with an `error` message; missing Supabase configuration returns `503`.
+
 Quick chat request:
 
 ```bash
