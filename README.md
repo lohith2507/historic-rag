@@ -180,6 +180,8 @@ curl -N http://localhost:3000/api/chat \
 
 Chat returns server-sent events for answer tokens, citations, and the optional illustration. Add `source` to limit retrieval to `mahabharata`, `ramayana`, or `gita`.
 
+There is no `mode` field: the follow-up mode is picked from the wording of the latest user message. Invalid input (a missing or empty `messages` array, a role other than `user` or `assistant`, empty message content, no user message, or an unknown `source`) returns `400` with an `error` message; missing Supabase configuration returns `503`.
+
 These public API routes call OpenRouter and spend credits per request.
 
 ## Acceptance checklist
