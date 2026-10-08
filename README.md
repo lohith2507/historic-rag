@@ -166,7 +166,7 @@ curl -sS http://localhost:3000/api/search \
   -d '{"query":"What does Krishna say about duty?","source":"gita","limit":5}'
 ```
 
-`source` and `limit` are optional; `limit` defaults to 8 and accepts values from 1 to 20. The response is JSON with a `results` array.
+`source` and `limit` are optional. `source` must be `mahabharata`, `ramayana`, or `gita`; without it, matches are pulled from each epic separately and merged by similarity so one epic cannot crowd out the others. `limit` defaults to 8 and accepts values from 1 to 20. The response is JSON with a `results` array.
 
 Invalid input (a missing or empty `query`, an unknown `source`, or an out-of-range `limit`) returns `400` with an `error` message; missing Supabase configuration returns `503`.
 
