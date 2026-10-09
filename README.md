@@ -206,3 +206,4 @@ After completing setup and ingest, verify:
 | `python -m unittest scripts.test_ingest` | Run the Python ingest unit tests from the repo root |
 | `python scripts/make_workflow_gif.py` | Regenerate `docs/workflow.gif` |
 | `python scripts/harvest_mahabharata_topics.py` | Refresh `data/mahabharata-chapters.json` (chat scene topics) |
+| `python scripts/ingest_artworks.py --source all` | Harvest public-domain epic artwork into Supabase `artworks` |
