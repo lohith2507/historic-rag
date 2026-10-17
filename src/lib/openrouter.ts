@@ -21,6 +21,11 @@ export function getSceneModel(): string {
   return process.env.OPENROUTER_SCENE_MODEL || getChatModel();
 }
 
+/**
+ * Embeds `text` via OpenRouter. The result must be exactly 1536 numbers to match the
+ * `vector(1536)` columns in `supabase/migrations/001_chunks.sql`, so any
+ * `OPENROUTER_EMBEDDING_MODEL` override has to produce the same dimensions.
+ */
 export async function embedText(text: string): Promise<number[]> {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
