@@ -9,6 +9,11 @@ export class MissingSupabaseConfigError extends Error {
   }
 }
 
+/**
+ * Server-only Supabase client using the service role key, which bypasses
+ * row-level security. Only call this from API routes or scripts; never import
+ * it into client components, or the key would ship to the browser.
+ */
 export function getServiceSupabase(): SupabaseClient {
   const url = process.env.SUPABASE_URL?.trim();
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
