@@ -108,6 +108,11 @@ export function sanitizeSvg(raw: string): string | null {
   return svg;
 }
 
+/**
+ * Split model output into a sanitized SVG and its caption. The caption comes from the first
+ * `CAPTION:` line, is trimmed to MAX_CAPTION_LENGTH characters, and falls back to
+ * DEFAULT_CAPTION when the model omits it. Returns null when no safe SVG can be extracted.
+ */
 export function parseSceneResponse(raw: string): Scene | null {
   const svg = sanitizeSvg(raw);
 
