@@ -12,6 +12,7 @@ type EmbeddingResponse = {
   };
 };
 
+/** OpenRouter model id for chat answers; set `OPENROUTER_CHAT_MODEL` to override the default. */
 export function getChatModel(): string {
   return process.env.OPENROUTER_CHAT_MODEL || DEFAULT_CHAT_MODEL;
 }
