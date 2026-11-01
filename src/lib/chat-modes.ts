@@ -34,6 +34,11 @@ function includesAny(haystack: string, markers: string[]): boolean {
   return markers.some((marker) => haystack.includes(marker));
 }
 
+/**
+ * Classify a follow-up request by case-insensitive substring match.
+ * Checked in priority order: battle-story, then encounters, then more-context;
+ * anything else is "default".
+ */
 export function detectAnswerMode(message: string): AnswerMode {
   const normalized = message.trim().toLowerCase();
 
