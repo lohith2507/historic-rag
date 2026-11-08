@@ -27,6 +27,12 @@ function toSourceId(source: string): SourceId {
   return source as SourceId;
 }
 
+/**
+ * Embed the query and return the closest pgvector chunks.
+ * When no source filter is set, fetches a batch from each epic and merges them
+ * so one book cannot crowd out the others, then sorts by similarity and keeps
+ * `limit` (default 8). Chunks below `minSimilarity` (default 0) are dropped.
+ */
 export async function retrieveChunks(query: string, opts: RetrieveOptions = {}): Promise<ChunkMatch[]> {
   const queryEmbedding = await embedText(query);
   const matchCount = opts.limit ?? 8;
