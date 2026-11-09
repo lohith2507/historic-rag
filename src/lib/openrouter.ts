@@ -1,6 +1,7 @@
 const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const DEFAULT_EMBEDDING_MODEL = "openai/text-embedding-3-small";
 const DEFAULT_CHAT_MODEL = "openai/gpt-4o-mini";
+// Must match the `vector(1536)` column width in the chunks migration; embedText rejects anything else.
 const EMBEDDING_DIMENSIONS = 1536;
 
 type EmbeddingResponse = {
