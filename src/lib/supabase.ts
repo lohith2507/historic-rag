@@ -22,5 +22,6 @@ export function getServiceSupabase(): SupabaseClient {
     throw new MissingSupabaseConfigError();
   }
 
+  // No session persistence: this runs per request on the server and has no user session to store.
   return createClient(url, key, { auth: { persistSession: false } });
 }
