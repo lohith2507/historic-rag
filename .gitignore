@@ -56,3 +56,6 @@ artworks.json
 graphify-out/
 .cursor/
 *.log
+# editor settings
+.vscode/
+.idea/
