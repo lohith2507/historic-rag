@@ -81,7 +81,7 @@ cp .env.example .env.local
 | `OPENROUTER_API_KEY` | ingest + app | Required |
 | `OPENROUTER_CHAT_MODEL` | app | Optional; defaults to `openai/gpt-4o-mini` |
 | `OPENROUTER_EMBEDDING_MODEL` | ingest + app | Optional; defaults to `openai/text-embedding-3-small` |
-| `OPENROUTER_SCENE_MODEL` | app (chat scenes) | Optional; defaults to `OPENROUTER_CHAT_MODEL` for post-answer SVG scenes |
+| `OPENROUTER_SCENE_MODEL` | app (chat scenes) | Optional; model for post-answer SVG scenes; defaults to `OPENROUTER_CHAT_MODEL` |
 | `SUPABASE_URL` | ingest + app | From Supabase project settings |
 | `SUPABASE_SERVICE_ROLE_KEY` | ingest + app | Service role key (server-side only) |
 | `POLLINATIONS_TOKEN` | app (illustrations) | Optional; without it Pollinations images are watermarked and rate-limited |
