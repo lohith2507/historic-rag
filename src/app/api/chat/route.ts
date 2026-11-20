@@ -7,7 +7,7 @@ import {
   retrievalLimit,
   type AnswerMode,
 } from "@/lib/chat-modes";
-import { getChatModel } from "@/lib/openrouter";
+import { getChatProvider } from "@/lib/openrouter";
 import { enrichVisualQuery, matchEpicTopic } from "@/lib/epic-topics";
 import { retrieveArtwork } from "@/lib/artwork";
 import { generateIllustration } from "@/lib/illustration";
@@ -16,9 +16,10 @@ import { generateScene } from "@/lib/scene";
 import { MissingSupabaseConfigError } from "@/lib/supabase";
 import type { ChunkMatch, SourceId } from "@/lib/types";
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const ALLOWED_SOURCES = new Set<SourceId>(["mahabharata", "ramayana", "gita"]);
 const ALLOWED_MESSAGE_ROLES = new Set(["user", "assistant"] as const);
+/** Without a cap OpenRouter reserves the model's full output window against the account balance. */
+const CHAT_MAX_TOKENS = 2500;
 const EMPTY_SCENE = { imageUrl: null, svg: null, caption: null, attribution: null, sourceUrl: null };
 
 type ChatRole = "user" | "assistant";
@@ -425,21 +426,23 @@ export async function POST(request: Request) {
       minSimilarity: 0.2,
     });
     const context = buildContext(chunks);
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const provider = getChatProvider();
 
-    if (!apiKey) {
-      throw new Error("Missing OPENROUTER_API_KEY");
+    if (!provider) {
+      throw new Error("Missing GROQ_API_KEY or OPENROUTER_API_KEY");
     }
 
-    const openRouterResponse = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
+    const completionResponse = await fetch(`${provider.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${provider.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: getChatModel(),
+        ...provider.options,
+        model: provider.model,
         stream: true,
+        max_tokens: CHAT_MAX_TOKENS,
         temperature: mode === "default" ? 0.3 : 0.35,
         messages: [
           {
@@ -451,9 +454,28 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!openRouterResponse.ok) {
-      const errorBody = (await openRouterResponse.json().catch(() => ({}))) as OpenRouterChunk;
-      throw new Error(errorBody.error?.message || `OpenRouter chat request failed with ${openRouterResponse.status}`);
+    if (!completionResponse.ok) {
+      const errorBody = (await completionResponse.json().catch(() => ({}))) as OpenRouterChunk;
+
+      if (completionResponse.status === 402) {
+        console.error(`${provider.name} credits exhausted`, errorBody.error?.message);
+        return NextResponse.json(
+          { error: `The AI provider is out of credits. Top up ${provider.name} to keep chatting.` },
+          { status: 402 },
+        );
+      }
+
+      if (completionResponse.status === 429) {
+        console.error(`${provider.name} rate limit hit`, errorBody.error?.message);
+        return NextResponse.json(
+          { error: "The AI provider is busy right now. Wait a few seconds and try again." },
+          { status: 429 },
+        );
+      }
+
+      throw new Error(
+        errorBody.error?.message || `${provider.name} chat request failed with ${completionResponse.status}`,
+      );
     }
 
     const sources = buildSources(chunks);
@@ -462,7 +484,7 @@ export async function POST(request: Request) {
         const encoder = new TextEncoder();
 
         try {
-          await streamOpenRouter(openRouterResponse, controller);
+          await streamOpenRouter(completionResponse, controller);
           controller.enqueue(encoder.encode(encodeSse("sources", sources)));
         } catch (error) {
           console.error("Chat stream failed", error);

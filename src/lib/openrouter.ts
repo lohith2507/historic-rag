@@ -13,6 +13,23 @@ type EmbeddingResponse = {
   };
 };
 
+const GROQ_BASE = "https://api.groq.com/openai/v1";
+const DEFAULT_GROQ_CHAT_MODEL = "openai/gpt-oss-120b";
+
+export type CompletionProvider = {
+  name: "Groq" | "OpenRouter";
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+  /** Extra request fields; spread into the completion body. */
+  options: Record<string, unknown>;
+};
+
+/** gpt-oss reasoning tokens count against max_tokens, so short budgets need low effort to leave room for the answer. */
+function groqOptions(model: string): Record<string, unknown> {
+  return model.startsWith("openai/gpt-oss") ? { reasoning_effort: "low" } : {};
+}
+
 /** OpenRouter model id for chat answers; set `OPENROUTER_CHAT_MODEL` to override the default. */
 export function getChatModel(): string {
   return process.env.OPENROUTER_CHAT_MODEL || DEFAULT_CHAT_MODEL;
@@ -21,6 +38,48 @@ export function getChatModel(): string {
 /** Scene drawing benefits from a stronger model, so it can be pointed elsewhere than the chat model. */
 export function getSceneModel(): string {
   return process.env.OPENROUTER_SCENE_MODEL || getChatModel();
+}
+
+/**
+ * Chat completions go to Groq when GROQ_API_KEY is set, otherwise OpenRouter.
+ * Embeddings always stay on OpenRouter: Groq has no embeddings endpoint and the stored vectors are 1536-d.
+ */
+function getCompletionProvider(purpose: "chat" | "scene"): CompletionProvider | null {
+  const groqKey = process.env.GROQ_API_KEY;
+
+  if (groqKey) {
+    const chatModel = process.env.GROQ_CHAT_MODEL || DEFAULT_GROQ_CHAT_MODEL;
+    const model = purpose === "scene" ? process.env.GROQ_SCENE_MODEL || chatModel : chatModel;
+    return {
+      name: "Groq",
+      baseUrl: GROQ_BASE,
+      apiKey: groqKey,
+      model,
+      options: groqOptions(model),
+    };
+  }
+
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+
+  if (!openRouterKey) {
+    return null;
+  }
+
+  return {
+    name: "OpenRouter",
+    baseUrl: OPENROUTER_BASE,
+    apiKey: openRouterKey,
+    model: purpose === "scene" ? getSceneModel() : getChatModel(),
+    options: {},
+  };
+}
+
+export function getChatProvider(): CompletionProvider | null {
+  return getCompletionProvider("chat");
+}
+
+export function getSceneProvider(): CompletionProvider | null {
+  return getCompletionProvider("scene");
 }
 
 /**

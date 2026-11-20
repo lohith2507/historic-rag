@@ -82,12 +82,15 @@ cp .env.example .env.local
 | `OPENROUTER_CHAT_MODEL` | app | Optional; defaults to `openai/gpt-4o-mini` |
 | `OPENROUTER_EMBEDDING_MODEL` | ingest + app | Optional; defaults to `openai/text-embedding-3-small` |
 | `OPENROUTER_SCENE_MODEL` | app (chat scenes) | Optional; model for post-answer SVG scenes; defaults to `OPENROUTER_CHAT_MODEL` |
+| `GROQ_API_KEY` | app (chat + scenes) | Optional; when set, chat and scene prompts use Groq instead of OpenRouter. Embeddings still need `OPENROUTER_API_KEY` |
+| `GROQ_CHAT_MODEL` | app | Optional; defaults to `openai/gpt-oss-120b` |
+| `GROQ_SCENE_MODEL` | app (chat scenes) | Optional; defaults to `GROQ_CHAT_MODEL` |
 | `SUPABASE_URL` | ingest + app | From Supabase project settings |
 | `SUPABASE_SERVICE_ROLE_KEY` | ingest + app | Service role key (server-side only) |
 | `POLLINATIONS_TOKEN` | app (illustrations) | Optional; without it Pollinations images are watermarked and rate-limited |
 | `ILLUSTRATION_SECRET` | app (illustrations) | Optional; signs illustration proxy URLs (falls back to `OPENROUTER_API_KEY`) |
 
-**Security:** Never commit `.env.local` or paste API keys into chat or issues. If a key is exposed, rotate it immediately in OpenRouter and Supabase.
+**Security:** Never commit `.env.local` or paste API keys into chat or issues. If a key is exposed, rotate it immediately in OpenRouter, Groq and Supabase.
 
 ### 3. Run the app locally
 

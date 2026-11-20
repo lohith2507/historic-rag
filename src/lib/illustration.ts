@@ -1,8 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { getSceneModel } from "./openrouter";
+import { getSceneProvider } from "./openrouter";
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const POLLINATIONS_BASE = "https://image.pollinations.ai/prompt";
 const IMAGE_WIDTH = 1024;
 const IMAGE_HEIGHT = 576;
@@ -155,22 +154,23 @@ export async function generateIllustration(
   context: string,
   visualFocus?: string,
 ): Promise<Illustration | null> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const provider = getSceneProvider();
   const secret = getIllustrationSecret();
 
-  if (!apiKey || !secret) {
+  if (!provider || !secret) {
     return null;
   }
 
   try {
-    const response = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
+    const response = await fetch(`${provider.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${provider.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: getSceneModel(),
+        ...provider.options,
+        model: provider.model,
         temperature: 0.5,
         max_tokens: 160,
         messages: [{ role: "user", content: buildDistillPrompt(question, context, visualFocus) }],

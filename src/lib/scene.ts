@@ -1,6 +1,5 @@
-import { getSceneModel } from "./openrouter";
+import { getSceneProvider } from "./openrouter";
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const DEFAULT_VIEW_BOX = "0 0 640 360";
 const DEFAULT_CAPTION = "Scene from the retrieved passages";
 const MAX_SVG_LENGTH = 24_000;
@@ -158,21 +157,22 @@ export function buildScenePrompt(question: string, context: string): string {
  * illustration must never take down the answer that was already streamed.
  */
 export async function generateScene(question: string, context: string): Promise<Scene | null> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const provider = getSceneProvider();
 
-  if (!apiKey) {
+  if (!provider) {
     return null;
   }
 
   try {
-    const response = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
+    const response = await fetch(`${provider.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${provider.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: getSceneModel(),
+        ...provider.options,
+        model: provider.model,
         temperature: 0.6,
         max_tokens: 2200,
         messages: [{ role: "user", content: buildScenePrompt(question, context) }],
