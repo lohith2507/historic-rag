@@ -99,7 +99,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Search and chat will not return results until you ingest the corpus (step 4).
+Open [http://localhost:3000](http://localhost:3000). Search and chat will not return results until you ingest the corpus (step 4). If port 3000 is already in use, Next.js starts on the next free port and prints the address in the terminal.
 
 ### 4. Ingest the PDF corpus
 
