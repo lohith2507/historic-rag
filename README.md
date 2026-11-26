@@ -90,6 +90,8 @@ cp .env.example .env.local
 | `POLLINATIONS_TOKEN` | app (illustrations) | Optional; without it Pollinations images are watermarked and rate-limited |
 | `ILLUSTRATION_SECRET` | app (illustrations) | Optional; signs illustration proxy URLs (falls back to `OPENROUTER_API_KEY`) |
 
+Only `OPENROUTER_API_KEY`, `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are required; every other variable is optional.
+
 **Security:** Never commit `.env.local` or paste API keys into chat or issues. If a key is exposed, rotate it immediately in OpenRouter, Groq and Supabase.
 
 ### 3. Run the app locally
